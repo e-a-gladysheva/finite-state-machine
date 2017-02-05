@@ -22,6 +22,7 @@ class FSM {
      * @param state
      */
     changeState(state) {
+        if(!this.config.states.hasOwnProperty(state)) throw Error();
         this.current = state;
     }
 
