@@ -30,7 +30,15 @@ class FSM {
      * Changes state according to event transition rules.
      * @param event
      */
-    trigger(event) {}
+    trigger(event) {
+        var state = this.config.states[this.current].transitions[event];
+        if (state == undefined) {
+            throw Error();
+        }
+        else {
+            this.changeState(state);
+        }
+    }
 
     /**
      * Resets FSM state to initial.
