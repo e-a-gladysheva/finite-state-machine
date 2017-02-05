@@ -7,6 +7,7 @@ class FSM {
         if (config == null) throw Error();
         this.config = config;
         this.current = config.initial;
+        this.undoArr = [config.initial];
     }
 
     /**
@@ -24,6 +25,7 @@ class FSM {
     changeState(state) {
         if(!this.config.states.hasOwnProperty(state)) throw Error();
         this.current = state;
+        this.undoArr.push(state);
     }
 
     /**
@@ -60,14 +62,20 @@ class FSM {
      * Returns false if undo is not available.
      * @returns {Boolean}
      */
-    undo() {}
+    undo() {
+        if (this.undoArr.length == 1) return false;
+        this.undoArr.pop();
+        this.current = this.undoArr[this.undoArr.length-1];
+        return true;
+    }
 
     /**
      * Goes redo to state.
      * Returns false if redo is not available.
      * @returns {Boolean}
      */
-    redo() {}
+    redo() {
+    }
 
     /**
      * Clears transition history
