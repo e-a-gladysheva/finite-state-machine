@@ -8,6 +8,7 @@ class FSM {
         this.config = config;
         this.current = config.initial;
         this.undoArr = [config.initial];
+        this.redoArr = [];
     }
 
     /**
@@ -26,6 +27,7 @@ class FSM {
         if(!this.config.states.hasOwnProperty(state)) throw Error();
         this.current = state;
         this.undoArr.push(state);
+        this.redoArr = [];
     }
 
     /**
@@ -64,7 +66,7 @@ class FSM {
      */
     undo() {
         if (this.undoArr.length == 1) return false;
-        this.undoArr.pop();
+        this.redoArr.push(this.undoArr.pop());
         this.current = this.undoArr[this.undoArr.length-1];
         return true;
     }
@@ -75,12 +77,20 @@ class FSM {
      * @returns {Boolean}
      */
     redo() {
+        if (this.redoArr.length == 0) return false;
+        this.undoArr.push(this.redoArr.pop());
+        this.current = this.undoArr[this.undoArr.length-1];
+        return true;
     }
 
     /**
      * Clears transition history
      */
-    clearHistory() {}
+    clearHistory() {
+        this.current = this.config.initial;
+        this.undoArr = [this.config.initial];
+        this.redoArr = [];
+    }
 }
 
 module.exports = FSM;
